@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub Actions Trigger</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 5px;
+        }
+        form {
+            text-align: center;
+        }
+        select {
+            width: 500px;
+            font-size: 1.2em;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 5px;
+        }
+        th {
+            background-color: #333333;
+            color: white;
+        }
+        .col1 {
+            width: 20px;
+        }
+        .col2 {
+            width: 350px;
+        }
+        .col3 {
+            width: 130px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: 90%;
+        }
+        button {
+            background-color: #90ee90;
+            font-size: 1.2em;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="trigger-form">
+        <h1>C4thUS CICD リリース指示画面サンプル</h1>
+
+        <h2>1. デプロイ先の環境を選択してください。</h2>
+        <select name="workflow">
+            <option value="cicd-for-production.yml">本番</option>
+            <option value="cicd-for-staging.yml">ステージング</option>
+            <option value="cicd-for-dev.yml">開発</option>
+            <option value="cicd-for-lib.yml">共通ライブラリ（GitHub Packages）</option>
+        </select>
+
+        <h2>2. デプロイ対象アプリのバージョンを入力してください。</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col1">No</th>
+                    <th class="col2">アプリ名</th>
+                    <th class="col3">バージョン</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>バックエンド_Web_共通_内部API</td><td><input type="text" name="1" value=""></td></tr>
+                <tr><td>2</td><td>バックエンド_Web_校務_内部API</td><td><input type="text" name="2" value=""></td></tr>
+                <tr><td>3</td><td>バックエンド_Web_児童生徒_内部API</td><td><input type="text" name="3" value=""></td></tr>
+                <tr><td>4</td><td>バックエンド_Web_内部APIオーケストレータ</td><td><input type="text" name="4" value=""></td></tr>
+                <tr><td>5</td><td>バックエンド_Web_外部IFオーケストレータ</td><td><input type="text" name="5" value=""></td></tr>
+                <tr><td>6</td><td>バックエンド_バッチ_Ａバッチ</td><td><input type="text" name="6" value=""></td></tr>
+                <tr><td>7</td><td>バックエンド_バッチ_Ｂバッチ</td><td><input type="text" name="7" value=""></td></tr>
+                <tr><td>8</td><td>バックエンド_バッチ_Ｃバッチ</td><td><input type="text" name="8" value=""></td></tr>
+                <tr><td>9</td><td>フロントエンド_Web_アプリＡ</td><td><input type="text" name="9" value=""></td></tr>
+                <tr><td>10</td><td>フロントエンド_Web_アプリＢ</td><td><input type="text" name="10" value=""></td></tr>
+                <tr><td>11</td><td>フロントエンド_Web_アプリＣ</td><td><input type="text" name="11" value=""></td></tr>
+            </tbody>
+        </table>
+
+        <br>
+        <h2>3. 処理を選択してください。</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col1">No</th>
+                    <th class="col2">処理の種類</th>
+                    <th class="col3">選択</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>12</td><td>SORRY画面表示</td><td><input type="checkbox" name="12" value="sor"></td></tr>
+                <tr><td>13</td><td>ビルド＆テスト</td><td> <input type="checkbox" name="13" value="bil"></td></tr>
+                <tr><td>14</td><td>デプロイ</td><td><input type="checkbox" name="14" value="dep"></td></tr>
+                <tr><td>15</td><td>リリース（スワップ）</td><td><input type="checkbox" name="15" value="re"></td></tr>
+                <tr><td>16</td><td>SORRY画面解除</td><td><input type="checkbox" name="16" value="sord"></td></tr>
+                <tr><td>17</td><td>フロントから簡易確認</td><td><input type="checkbox" name="17" value="fro"></td></tr>
+            </tbody>
+        </table>
+
+        <br>
+        <h2>4. パーソナルアクセストークンを入力してください。</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="col1">No</th>
+                    <th class="col2"></th>
+                    <th class="col3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>18</td><td>Personal access token</td><td><input type="password" id="token" name="token"></td></tr>
+            </tbody>
+        </table>
+
+        <br>
+        <br>
+        <h2>5. 実行ボタンをクリックすると、処理を実行します（GitHub Actionsを起動します）。</h2>
+        <button type="button" onclick="triggerAction()">実&nbsp;行</button>
+
+        <br>
+        <br>
+        <h2>6. 以下のリンク先から、実行結果を確認してください。</h2>
+        
+        <table width="500">
+            <tbody>
+                <tr>
+                        GitHub Actions WebUIのリンク<br>
+                        <a href="https://github.com/yos-person-cicd-org/cicd/actions">https://github.com/yos-person-cicd-org/cicd/actions</a>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <script>
+        async function triggerAction() {
+
+            //Not Implemented
+        }
+    </script>
+</body>
+</html>
